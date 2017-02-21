@@ -224,7 +224,7 @@ function jomres_cmsspecific_addheaddata($type, $path = '', $filename = '', $incl
         mkdir (JOMRES_TEMP_ABSPATH.JRDS.'css'.JRDS);
         }
      
-    $mpath = JOMRES_ROOT_DIRECTORY.JRDS.'libraries';
+    $mpath = JOMRESCONFIG_ABSOLUTE_PATH.JOMRES_ROOT_DIRECTORY.JRDS.'libraries';
     require_once $mpath . '/minify/src/Minify.php';
     require_once $mpath . '/minify/src/CSS.php';
     require_once $mpath . '/minify/src/JS.php';
