@@ -224,16 +224,16 @@ function jomres_cmsspecific_addheaddata($type, $path = '', $filename = '', $incl
         mkdir (JOMRES_TEMP_ABSPATH.JRDS.'css'.JRDS);
         }
      
-    $path = JOMRES_ROOT_DIRECTORY.JRDS.'libraries';
-    require_once $path . '/minify/src/Minify.php';
-    require_once $path . '/minify/src/CSS.php';
-    require_once $path . '/minify/src/JS.php';
-    require_once $path . '/minify/src/Exception.php';
-    require_once $path . '/minify/src/Exceptions/BasicException.php';
-    require_once $path . '/minify/src/Exceptions/FileImportException.php';
-    require_once $path . '/minify/src/Exceptions/IOException.php';
-    require_once $path . '/path-converter/src/ConverterInterface.php';
-    require_once $path . '/path-converter/src/Converter.php';
+    $mpath = JOMRES_ROOT_DIRECTORY.JRDS.'libraries';
+    require_once $mpath . '/minify/src/Minify.php';
+    require_once $mpath . '/minify/src/CSS.php';
+    require_once $mpath . '/minify/src/JS.php';
+    require_once $mpath . '/minify/src/Exception.php';
+    require_once $mpath . '/minify/src/Exceptions/BasicException.php';
+    require_once $mpath . '/minify/src/Exceptions/FileImportException.php';
+    require_once $mpath . '/minify/src/Exceptions/IOException.php';
+    require_once $mpath . '/path-converter/src/ConverterInterface.php';
+    require_once $mpath . '/path-converter/src/Converter.php';
     
     $doc = JFactory::getDocument();
 
@@ -256,10 +256,8 @@ function jomres_cmsspecific_addheaddata($type, $path = '', $filename = '', $incl
     switch ($type) {
         case 'javascript':
             //JHTML::script( $path . $filename, false ); // If we want to include version numbers in script filenames, we can't use this. Instead we need to directly access JFactory as below
-/*             var_dump($filename);
-            var_dump( strpos($filename , ".min."));
-            if ( strpos($filename , ".min.") === 0 ) {
-                
+
+            if ( strpos($filename , ".min.") === false && $filename != '&foo=bar' && $filename != "markerclusterer.js") {
                 if (!file_exists(JOMRES_TEMP_ABSPATH.'javascript'.JRDS.$filename)) {
                     $minifier = new Minify\JS();
                     $minifier->add($path.$filename);
@@ -270,7 +268,7 @@ function jomres_cmsspecific_addheaddata($type, $path = '', $filename = '', $incl
                 else {
                     $data = JOMRES_TEMP_RELPATH.'javascript/'.$filename; 
                     }
-                } */
+                }
 
             
             if ($async)
@@ -280,6 +278,20 @@ function jomres_cmsspecific_addheaddata($type, $path = '', $filename = '', $incl
             break;
         case 'css':
             //JHTML::stylesheet( $path . $filename, array (), false, false ); // If we want to include version numbers in script filenames, we can't use this. Instead we need to directly access JFactory as below
+            
+            if ( strpos($filename , ".min.") === false ) {
+                if (!file_exists(JOMRES_TEMP_ABSPATH.'css'.JRDS.$filename)) {
+                    $minifier = new Minify\JS();
+                    $minifier->add($path.$filename);
+                    $minifiedPath =  JOMRES_TEMP_ABSPATH.'css/'.JRDS.$filename;
+                    $minifier->minify($minifiedPath);
+                    $data = JOMRES_TEMP_RELPATH.'css/'.$filename; 
+                    }
+                else {
+                    $data = JOMRES_TEMP_RELPATH.'css/'.$filename; 
+                    }
+                }
+            
             $doc->addStyleSheet($data);
             break;
         default:
