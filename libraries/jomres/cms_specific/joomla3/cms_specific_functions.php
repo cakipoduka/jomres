@@ -14,6 +14,8 @@
 defined('_JOMRES_INITCHECK') or die('Direct Access to this file is not allowed.');
 // ################################################################
 
+use MatthiasMullie\Minify;
+
 function jomres_cmsspecific_error_logging_cms_files_to_not_backtrace()
 {
     return array('application.php', 'mcHandler.class.php', 'site.php', 'cms.php', 'helper.php');
@@ -215,6 +217,24 @@ function jomres_cmsspecific_addheaddata($type, $path = '', $filename = '', $incl
         return;
     }
 
+    if (!is_dir(JOMRES_TEMP_ABSPATH.JRDS.'javascript'.JRDS)) {
+        mkdir (JOMRES_TEMP_ABSPATH.JRDS.'javascript'.JRDS);
+        }
+    if (!is_dir(JOMRES_TEMP_ABSPATH.JRDS.'css'.JRDS)) {
+        mkdir (JOMRES_TEMP_ABSPATH.JRDS.'css'.JRDS);
+        }
+     
+    $path = JOMRES_ROOT_DIRECTORY.JRDS.'libraries';
+    require_once $path . '/minify/src/Minify.php';
+    require_once $path . '/minify/src/CSS.php';
+    require_once $path . '/minify/src/JS.php';
+    require_once $path . '/minify/src/Exception.php';
+    require_once $path . '/minify/src/Exceptions/BasicException.php';
+    require_once $path . '/minify/src/Exceptions/FileImportException.php';
+    require_once $path . '/minify/src/Exceptions/IOException.php';
+    require_once $path . '/path-converter/src/ConverterInterface.php';
+    require_once $path . '/path-converter/src/Converter.php';
+    
     $doc = JFactory::getDocument();
 
     JHtml::_('bootstrap.framework');
@@ -236,6 +256,23 @@ function jomres_cmsspecific_addheaddata($type, $path = '', $filename = '', $incl
     switch ($type) {
         case 'javascript':
             //JHTML::script( $path . $filename, false ); // If we want to include version numbers in script filenames, we can't use this. Instead we need to directly access JFactory as below
+/*             var_dump($filename);
+            var_dump( strpos($filename , ".min."));
+            if ( strpos($filename , ".min.") === 0 ) {
+                
+                if (!file_exists(JOMRES_TEMP_ABSPATH.'javascript'.JRDS.$filename)) {
+                    $minifier = new Minify\JS();
+                    $minifier->add($path.$filename);
+                    $minifiedPath =  JOMRES_TEMP_ABSPATH.'javascript/'.JRDS.$filename;
+                    $minifier->minify($minifiedPath);
+                    $data = JOMRES_TEMP_RELPATH.'javascript/'.$filename; 
+                    }
+                else {
+                    $data = JOMRES_TEMP_RELPATH.'javascript/'.$filename; 
+                    }
+                } */
+
+            
             if ($async)
 				$doc->addScript($data,"text/javascript",false,true);
 			else
