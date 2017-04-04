@@ -4,7 +4,7 @@
  *
  * @author Vince Wooll <sales@jomres.net>
  *
- * @version Jomres 9.8.26
+ * @version Jomres 9.8.29
  *
  * @copyright	2005-2017 Vince Wooll
  * Jomres (tm) PHP, CSS & Javascript files are released under both MIT and GPL2 licenses. This means that you can choose the license that best suits your project, and use it accordingly
@@ -99,6 +99,20 @@ class j06001dashboard_events_ajax
 
         $contractList = doSelectSql($query);
         if (count($contractList) > 0) {
+            
+
+            $all_booking_notes = array();
+            $query = "SELECT `contract_uid` , `note` ,`timestamp` FROM #__jomcomp_notes WHERE property_uid = " .(int) $property_uid ;
+            $notesList = doSelectSql ( $query );
+            if (!empty($notesList)) {
+                foreach ($notesList as $note ) {
+                    if ( trim($note->note) != "" ) {
+                        $all_booking_notes[$note->contract_uid][] = $note;
+                    }
+                    
+                }
+            }
+
             $today = date('Y/m/d');
 
             foreach ($contractList as $contract) {
@@ -182,22 +196,29 @@ class j06001dashboard_events_ajax
                     $description .= jr_gettext('_JOMRES_BOOKING_NUMBER', '_JOMRES_BOOKING_NUMBER', false).': '.$c->tag.'<br/>';
                 }
                 $description .= jr_gettext('_JOMRES_HFROM', '_JOMRES_HFROM', false).': '.outputDate($c->arrival).'<br/>';
-                $description .= jr_gettext('_JOMRES_HTO', '_JOMRES_HTO', false).': '.outputDate($c->departure);
-
+                $description .= jr_gettext('_JOMRES_HTO', '_JOMRES_HTO', false).': '.outputDate($c->departure).'';
+                
+                if (isset($all_booking_notes[$c->contract_uid]) ) {
+                    $description .= '<hr/>';
+                    foreach ( $all_booking_notes[$c->contract_uid] as $note ) {
+                         $description .= $note->timestamp.' '.sanitiseOverlibOutput($note->note).'<br/>';
+                    }
+                }
+                
                 if ((int) $resource > 0) {
                     $contracts[] = array(
-                                        'id' => $id,
-                                        'resourceId' => $resource,
-                                        'start' => $start,
-                                        'end' => $end,
-                                        'title' => $title,
-                                        'url' => $url,
-                                        'className' => $imgToShow,
-                                        'description' => $description,
-                                        'contract_uid' => $c->contract_uid,
-                                        'room_uid' => $c->room_uid,
-                                        'this_contract_room_uids' => $room_uids[$c->contract_uid],
-                                        );
+										'id' => $id,
+										'resourceId' => $resource,
+										'start' => $start,
+										'end' => $end,
+										'title' => $title,
+										'url' => $url,
+										'className' => $imgToShow,
+										'description' => $description,
+										'contract_uid' => $c->contract_uid,
+										'room_uid' => $c->room_uid,
+										'this_contract_room_uids' => $room_uids[$c->contract_uid],
+										);
                 }
             }
         } else {

@@ -4,7 +4,7 @@
  *
  * @author Vince Wooll <sales@jomres.net>
  *
- * @version Jomres 9.8.26
+ * @version Jomres 9.8.29
  *
  * @copyright	2005-2017 Vince Wooll
  * Jomres is currently available for use in all personal or commercial projects under both MIT and GPL2 licenses. This means that you can choose the license that best suits your project, and use it accordingly
@@ -16,10 +16,9 @@ defined('_JOMRES_INITCHECK') or die('Direct Access to this file is not allowed.'
 
 $scriptname = str_replace('/', '', $_SERVER[ 'PHP_SELF' ]);
 
-//TODO: we don`t need this, wp is already loaded
-/* if (!defined('WPINC')) {
+if (!defined('WPINC')) {
 	require_once JOMRESCONFIG_ABSOLUTE_PATH.JRDS.'wp-config.php';
-} */
+}
 
 if (isset($_REQUEST[ 'no_html' ])) {
     $no_html = (int) $_REQUEST[ 'no_html' ];

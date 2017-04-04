@@ -4,7 +4,7 @@
  *
  * @author Vince Wooll <sales@jomres.net>
  *
- * @version Jomres 9.8.26
+ * @version Jomres 9.8.29
  *
  * @copyright	2005-2017 Vince Wooll
  * Jomres (tm) PHP, CSS & Javascript files are released under both MIT and GPL2 licenses. This means that you can choose the license that best suits your project, and use it accordingly
@@ -21,23 +21,31 @@ defined('_JOMRES_INITCHECK') or die('');
 // sefsafe: sef url not passed through jomresURL function
 // ajax: ajax safe url
 
-function get_booking_url($property_uid = 0, $type = 'sef') {
-    switch($type) {
-		case 'sef':
-			$url = jomresURL(JOMRES_SITEPAGE_URL.'&task=dobooking&selectedProperty='.$property_uid);
-			break;
-		case 'nosef':
-			$url = jomresURL(JOMRES_SITEPAGE_URL_NOSEF.'&task=dobooking&selectedProperty='.$property_uid);
-			break;
-		case 'sefsafe':
-			$url = JOMRES_SITEPAGE_URL.'&task=dobooking&selectedProperty='.$property_uid;
-			break;
-		case 'ajax':
-			$url = JOMRES_SITEPAGE_URL_AJAX.'&task=dobooking&selectedProperty='.$property_uid;
-			break;
-		default:
-			$url = jomresURL(JOMRES_SITEPAGE_URL.'&task=dobooking&selectedProperty='.$property_uid);
-			break;
+function get_booking_url($property_uid = 0, $type = 'sef', $params = '') {
+
+	$mrConfig = getPropertySpecificSettings($property_uid);
+	
+	if (isset($mrConfig[ 'externalBookingFormUrl' ]) && $mrConfig[ 'externalBookingFormUrl' ] != '') {
+		$url = filter_var($mrConfig[ 'externalBookingFormUrl' ], FILTER_SANITIZE_URL);
+	} else {
+		switch($type) {
+			case 'sef':
+				$url = jomresURL(JOMRES_SITEPAGE_URL.'&task=dobooking&selectedProperty='.$property_uid.$params);
+				break;
+			case 'nosef':
+				$url = jomresURL(JOMRES_SITEPAGE_URL_NOSEF.'&task=dobooking&selectedProperty='.$property_uid.$params);
+				break;
+			case 'sefsafe':
+				$url = JOMRES_SITEPAGE_URL.'&task=dobooking&selectedProperty='.$property_uid.$params;
+				break;
+			case 'ajax':
+				$url = JOMRES_SITEPAGE_URL_AJAX.'&task=dobooking&selectedProperty='.$property_uid.$params;
+				break;
+			default:
+				$url = jomresURL(JOMRES_SITEPAGE_URL.'&task=dobooking&selectedProperty='.$property_uid.$params);
+				break;
+		}
 	}
+
     return $url;
 }
