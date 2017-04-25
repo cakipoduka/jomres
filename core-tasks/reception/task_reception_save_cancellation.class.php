@@ -14,7 +14,7 @@
 defined('_JOMRES_INITCHECK') or die('');
 // ################################################################
 
-class task_manager_save_cancellation
+class task_reception_save_cancellation
 {
     public function __construct()
     {
