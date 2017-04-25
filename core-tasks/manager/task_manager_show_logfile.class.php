@@ -14,7 +14,7 @@
 defined('_JOMRES_INITCHECK') or die('');
 // ################################################################
 
-class task_public_show_logfile
+class task_manager_show_logfile
 {
     public function __construct()
     {

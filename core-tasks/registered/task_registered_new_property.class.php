@@ -14,7 +14,7 @@
 defined('_JOMRES_INITCHECK') or die('Direct Access to this file is not allowed.');
 // ################################################################
 
-class task_public_new_property
+class task_registered_new_property
 {
     public function __construct()
     {
